@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Docker Volume Demo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f9;
+      color: #333;
+      padding: 2rem;
+      text-align: center;
+    }
+    h1 {
+      color: #0078d7;
+    }
+    .timestamp {
+      margin-top: 20px;
+      font-size: 1.1rem;
+      color: #555;
+    }
+    button {
+      padding: 10px 20px;
+      margin-top: 20px;
+      background-color: #0078d7;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #005fa3;
+    }
+  </style>
+</head>
+<body>
+  <h1>🚀 Docker + Nginx + Volume Demo</h1>
+  <p>This page is served from a Docker container using a mounted volume.</p>
+
+  <div class="timestamp">
+    Page loaded at: <span id="time"></span>
+  </div>
+
+  <button onclick="updateTime()">Refresh Timestamp</button>
+
+  <script>
+    function updateTime() {
+      const now = new Date().toLocaleString();
+      document.getElementById("time").textContent = now;
+    }
+
+    updateTime(); // set on load
+  </script>
+</body>
+</html>

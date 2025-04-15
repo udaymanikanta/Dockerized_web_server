@@ -1,0 +1,39 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main   # Trigger the pipeline for push events on main branch
+  pull_request:
+    branches:
+      - main   # Trigger the pipeline for pull requests
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        push: true
+        tags: ${{ secrets.DOCKER_USERNAME }}/docker-nginx-vol:latest
+
+    - name: Deploy to Server (SSH)
+      uses: appleboy/ssh-action@v0.1.2
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          docker pull ${{ secrets.DOCKER_USERNAME }}/docker-nginx-vol:latest
+          docker stop nginx-volume-demo || true
+          docker rm nginx-volume-demo || true
+          docker run -d --name nginx-volume-demo -p 8080:80 -v /path/to/content:/usr/share/nginx/html ${{ secrets.DOCKER_USERNAME }}/docker-nginx-vol:latest
